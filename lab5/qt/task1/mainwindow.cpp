@@ -1,10 +1,15 @@
 #include "mainwindow.h"
+#include "qnamespace.h"
 
 #include <QDebug>
 #include <QAction>
 #include <QSet>
 #include <QStatusBar>
 #include <QPushButton>
+#include <QtGlobal>
+#include <QMouseEvent>
+#include <QDrag>
+#include <QMimeData>
 
 #include <iostream>
 
@@ -14,6 +19,8 @@ MainWindow::MainWindow(QWidget* parent) :
 	QMainWindow(parent),
 	ui(new Ui::MainWindow)
 {
+	setAcceptDrops(true);
+
 	tree_widget = new TreeWidget;
 	permanent_label = new QLabel;
 
@@ -84,6 +91,7 @@ void MainWindow::InitNewSubWindow(QAction* show_action,
 }
 
 void MainWindow::SaveToFile(const std::string& file_name) {
+	ui->statusbar->showMessage("File Saved");
 	std::ofstream fout(file_name);
 	auto data_set = tree_widget->GetDataSet();
 	for (auto& elem : data_set) {
@@ -93,10 +101,10 @@ void MainWindow::SaveToFile(const std::string& file_name) {
 	}
 
 	fout.close();
-	ui->statusbar->showMessage("File Saved!");
 }
 
 void MainWindow::UploadFromFile(const std::string& file_name) {
+	ui->statusbar->showMessage("File Uploaded");
 	std::ifstream fin(file_name);
 	if (!fin.is_open()) {
 		return;
@@ -109,6 +117,29 @@ void MainWindow::UploadFromFile(const std::string& file_name) {
 	}
 
 	fin.close();
-	ui->statusbar->showMessage("File Uploaded!");
+}
+
+void MainWindow::dropEvent(QDropEvent* event) {
+	const QMimeData* mem = event->mimeData();
+	if (event->source() == tree_widget) {
+		return;
+	}
+
+	if (mem->hasFormat("item_widget")) {
+		const QTreeWidgetItem* source_item = (const QTreeWidgetItem*)
+			event->mimeData()->data("item_widget").data();
+
+		QTreeWidgetItem* item = source_item->clone();
+		tree_widget->addTopLevelItem(item);
+
+		event->acceptProposedAction();
+	} else if (mem->hasUrls()) {
+		UploadFromFile(mem->urls().first().
+							toLocalFile().toUtf8().toStdString());
+	}
+}
+
+void MainWindow::dragEnterEvent(QDragEnterEvent* event) {
+	event->acceptProposedAction();
 }
 

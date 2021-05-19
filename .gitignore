@@ -1,0 +1,12 @@
+*.o
+*.ii
+*.zip
+moc_*
+
+*.swp
+*.swn
+
+.*
+
+!.gitignore
+

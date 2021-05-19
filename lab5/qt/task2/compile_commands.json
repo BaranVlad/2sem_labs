@@ -1,0 +1,34 @@
+[
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-pipe",
+            "-O2",
+            "-Wall",
+            "-W",
+            "-D_REENTRANT",
+            "-fPIC",
+            "-DQT_NO_DEBUG",
+            "-DQT_WIDGETS_LIB",
+            "-DQT_GUI_LIB",
+            "-DQT_CORE_LIB",
+            "-I.",
+            "-I.",
+            "-I../../../../Qt/5.13.2/gcc_64/include",
+            "-I../../../../Qt/5.13.2/gcc_64/include/QtWidgets",
+            "-I../../../../Qt/5.13.2/gcc_64/include/QtGui",
+            "-I../../../../Qt/5.13.2/gcc_64/include/QtCore",
+            "-I.",
+            "-isystem",
+            "/usr/include/libdrm",
+            "-I.",
+            "-I../../../../Qt/5.13.2/gcc_64/mkspecs/linux-g++",
+            "-o",
+            "main_window.o",
+            "main_window.cpp"
+        ],
+        "directory": "/home/bladvaran/labs/lab5/qt/task2",
+        "file": "main_window.cpp"
+    }
+]
